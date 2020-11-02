@@ -11,13 +11,14 @@
 user_agent="https://github.com/andrewharvey/osm-get-user-changeset-metadata"
 
 display_name="$1"
-uid="$2"
-if [ -z "$display_name" ] || [ -z "$uid" ] ; then
-    echo "Usage: $0 display_name uid"
+if [ -z "$display_name" ] ; then
+    echo "Usage: $0 display_name"
     exit
 fi
 
 quiet="--quiet"
+
+uid=`wget $quiet --user-agent="$user_agent" -O - "https://api.openstreetmap.org/api/0.6/changesets?display_name=$display_name" | xmllint --xpath 'string(/osm/changeset/@uid)' -`
 
 echo "User '$display_name' ($uid)"
 mkdir -p $uid
